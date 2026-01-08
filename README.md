@@ -8,3 +8,6 @@ Linkurate adalah website yang membantu pengguna internet mengurangi risiko menja
 
 # anggota 1
 Agnes Dinita Harsanti
+
+# anggota 2
+Maria Sevti Cahayani
