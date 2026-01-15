@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linkurate - Cek Keamanan Link</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset dan Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --midnight-navy: #0E1A2B;
+            --slate-navy: #18263A;
+            --steel-indigo: #3E5BA9;
+            --calm-sage-teal: #6FA8A1;
+            --dusty-rose-clay: #C18484;
+            --misty-blue-gray: #A9B4C8;
+            --soft-ivory-ink: #E4E8F0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--midnight-navy);
+            color: var(--soft-ivory-ink);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            padding: 40px 0 20px;
+            border-bottom: 1px solid rgba(163, 180, 200, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .app-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 48px;
+            font-weight: 600;
+            color: var(--soft-ivory-ink);
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 18px;
+            color: var(--misty-blue-gray);
+            font-weight: 500;
+            margin-bottom: 30px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background-color: var(--slate-navy);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--soft-ivory-ink);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--steel-indigo);
+        }
+
+        .description {
+            color: var(--misty-blue-gray);
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        /* URL Input Section */
+        .url-input-section {
+            background-color: rgba(24, 38, 58, 0.7);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(62, 91, 169, 0.2);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .url-input {
+            width: 100%;
+            padding: 18px 20px;
+            border-radius: 10px;
+            border: 2px solid rgba(62, 91, 169, 0.3);
+            background-color: rgba(14, 26, 43, 0.7);
+            color: var(--soft-ivory-ink);
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .url-input:focus {
+            outline: none;
+            border-color: var(--steel-indigo);
+            box-shadow: 0 0 0 3px rgba(62, 91, 169, 0.2);
+        }
+
+        .url-input::placeholder {
+            color: var(--misty-blue-gray);
+            opacity: 0.7;
+        }
+
+        .scan-button {
+            background-color: var(--steel-indigo);
+            color: var(--soft-ivory-ink);
+            border: none;
+            padding: 18px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .scan-button:hover {
+            background-color: #4a6bc5;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(62, 91, 169, 0.3);
+        }
+
+        .scan-button:active {
+            transform: translateY(0);
+        }
+
+        .scan-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Results Section */
+        .results-section {
+            display: none;
+            background-color: var(--slate-navy);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .results-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(163, 180, 200, 0.1);
+        }
+
+        .status-badge {
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-safe {
+            background-color: var(--calm-sage-teal);
+            color: var(--midnight-navy);
+        }
+
+        .status-suspicious {
+            background-color: var(--dusty-rose-clay);
+            color: var(--midnight-navy);
+        }
+
+        .analyzed-url {
+            color: var(--misty-blue-gray);
+            font-size: 14px;
+            word-break: break-all;
+            background-color: rgba(14, 26, 43, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .result-details {
+            margin-bottom: 30px;
+        }
+
+        .detail-item {
+            margin-bottom: 20px;
+        }
+
+        .detail-title {
+            font-weight: 600;
+            color: var(--soft-ivory-ink);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detail-content {
+            color: var(--misty-blue-gray);
+            background-color: rgba(14, 26, 43, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--steel-indigo);
+        }
+
+        .suggestions-list {
+            list-style-type: none;
+            padding-left: 5px;
+        }
+
+        .suggestions-list li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .suggestions-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--calm-sage-teal);
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--misty-blue-gray);
+            font-size: 14px;
+            border-top: 1px solid rgba(163, 180, 200, 0.1);
+            margin-top: 20px;
+        }
+
+        .disclaimer {
+            max-width: 700px;
+            margin: 0 auto 20px;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .copyright {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            position: relative;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .loading:after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            border: 3px solid transparent;
+            border-top-color: var(--soft-ivory-ink);
+            border-radius: 50%;
+            animation: loading-spinner 1s ease infinite;
+        }
+
+        @keyframes loading-spinner {
+            from { transform: rotate(0turn); }
+            to { transform: rotate(1turn); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-title {
+                font-size: 36px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .hero-section, .url-input-section, .results-section {
+                padding: 25px;
+            }
+            
+            .result-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .scan-button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-title {
+                font-size: 32px;
+            }
+            
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                padding: 0 10px;
+            }
+            
+            .hero-section, .url-input-section, .results-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="app-title">Linkurate</h1>
+            <p class="tagline">Cek sebelum klik!</p>
+        </header>
+        
+        <main>
+            <section class="hero-section">
+                <h2 class="section-title">
+                    <i class="fas fa-shield-alt"></i>
+                    Lindungi Diri dari Link Berbahaya
+                </h2>
+                <p class="description">
+                    Linkurate adalah alat sederhana untuk mengecek tingkat risiko sebuah link (URL) sebelum Anda membukanya. 
+                    Analisis dilakukan langsung di browser Anda tanpa menyimpan data apa pun.
+                </p>
+                
+                <div class="url-input-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-link"></i>
+                        Cek Keamanan Link
+                    </h3>
+                    <div class="input-group">
+                        <input 
+                            type="url" 
+                            class="url-input" 
+                            placeholder="Masukkan URL lengkap (contoh: https://contoh.com)"
+                            id="urlInput"
+                        >
+                        <button class="scan-button" id="scanButton">
+                            <i class="fas fa-search"></i>
+                            Scan Link
+                        </button>
+                    </div>
+                    <p class="description" style="font-size: 14px; margin-bottom: 0;">
+                        <i class="fas fa-info-circle"></i>
+                        Analisis hanya memeriksa pola URL, bukan konten halaman. Hasil konservatif untuk keamanan Anda.
+                    </p>
+                </div>
+            </section>
+            
+            <section class="results-section" id="resultsSection">
+                <div class="result-header">
+                    <div>
+                        <h3 class="section-title" style="margin-bottom: 5px;">
+                            <i class="fas fa-chart-bar"></i>
+                            Hasil Analisis
+                        </h3>
+                    </div>
+                    <div id="statusBadge" class="status-badge">
+                        <!-- Status akan dimasukkan oleh JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="analyzed-url">
+                    <strong>URL yang dianalisis:</strong> <span id="analyzedUrl">-</span>
+                </div>
+                
+                <div class="result-details">
+                    <div class="detail-item">
+                        <h4 class="detail-title">
+                            <i class="fas fa-clipboard-check"></i>
+                            Indikator yang Terdeteksi
+                        </h4>
+                        <div class="detail-content" id="indicators">
+                            <!-- Daftar indikator akan dimasukkan oleh JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <h4 class="detail-title">
+                            <i class="fas fa-lightbulb"></i>
+                            Saran untuk Anda
+                        </h4>
+                        <div class="detail-content">
+                            <ul class="suggestions-list" id="suggestions">
+                                <!-- Saran akan dimasukkan oleh JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <div class="disclaimer">
+                <p>
+                    <strong>Disclaimer:</strong> Linkurate adalah alat bantu edukasi yang menganalisis pola URL secara statis. 
+                    Hasil analisis bersifat indikatif dan konservatif. Kami tidak bertanggung jawab atas kerugian yang mungkin timbul. 
+                    Selalu berhati-hati saat berbagi informasi pribadi secara online.
+                </p>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Linkurate. Semua analisis dilakukan di browser Anda, tanpa pengumpulan data.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Database pola URL mencurigakan
+        const suspiciousPatterns = {
+            phishing: [
+                'login', 'signin', 'verify', 'account', 'security', 'update', 'confirm',
+                'bank', 'paypal', 'dana', 'ovo', 'gopay', 'bca', 'bri', 'mandiri', 'bni',
+                'password', 'credential', 'authentication', 'validation'
+            ],
+            gambling: [
+                'poker', 'casino', 'slot', 'bet', 'taruhan', 'togel', 'judibola',
+                'sportsbook', 'livecasino', 'jackpot', 'lottery', 'gamble'
+            ],
+            adult: [
+                'porn', 'xxx', 'adult', 'sex', 'nude', 'hentai', 'bokep', 'dewasa',
+                'webcam', 'livecam', 'dating', 'escort', 'hookup'
+            ],
+            scam: [
+                'free', 'gift', 'reward', 'winner', 'prize', 'bonus', 'claim', 'reward',
+                'cash', 'money', 'million', 'billion', 'rich', 'profit', 'earn',
+                'investment', 'cryptocurrency', 'bitcoin', 'ethereum', 'forex', 'trading'
+            ],
+            suspiciousDomains: [
+                '.xyz', '.top', '.club', '.loan', '.work', '.site', '.online', '.webcam',
+                '.download', '.stream', '.gq', '.ml', '.cf', '.ga', '.tk'
+            ],
+            suspiciousTlds: [
+                '.ru', '.ua', '.cn', '.in', '.br', '.id', '.my', '.vn', '.th', '.ph'
+            ]
+        };
+
+        // Database domain tepercaya
+        const trustedDomains = [
+            'google.com', 'youtube.com', 'facebook.com', 'instagram.com', 'twitter.com',
+            'whatsapp.com', 'tiktok.com', 'linkedin.com', 'microsoft.com', 'apple.com',
+            'amazon.com', 'netflix.com', 'wikipedia.org', 'github.com', 'stackoverflow.com',
+            'detik.com', 'kompas.com', 'tribunnews.com', 'liputan6.com', 'cnnindonesia.com',
+            'bca.co.id', 'bni.co.id', 'bri.co.id', 'mandiri.co.id', 'dana.id', 'gopay.com',
+            'ovo.id', 'shopee.co.id', 'tokopedia.com', 'bukalapak.com', 'blibli.com',
+            'gojek.com', 'grab.com', 'traveloka.com', 'tiket.com'
+        ];
+
+        // Fungsi untuk memindai URL
+        function scanURL(url) {
+            // Normalisasi URL
+            let normalizedURL = url.trim().toLowerCase();
+            
+            // Validasi format URL
+            if (!normalizedURL.startsWith('http://') && !normalizedURL.startsWith('https://')) {
+                normalizedURL = 'https://' + normalizedURL;
+            }
+            
+            // Ekstrak domain dan path
+            let domain, path;
+            try {
+                const urlObj = new URL(normalizedURL);
+                domain = urlObj.hostname;
+                path = urlObj.pathname + urlObj.search;
+            } catch (e) {
+                return {
+                    status: 'suspicious',
+                    reason: 'Format URL tidak valid',
+                    details: 'URL yang Anda masukkan tidak dalam format yang benar. Pastikan URL diawali dengan http:// atau https://'
+                };
+            }
+            
+            // Analisis domain dan path
+            const detectedPatterns = [];
+            let riskScore = 0;
+            
+            // Cek domain tepercaya
+            const isTrustedDomain = trustedDomains.some(trusted => 
+                domain === trusted || domain.endsWith('.' + trusted)
+            );
+            
+            if (isTrustedDomain) {
+                riskScore -= 20;
+                detectedPatterns.push({type: 'safe', text: 'Domain termasuk dalam daftar tepercaya'});
+            }
+            
+            // Cek TLD mencurigakan
+            const hasSuspiciousTld = suspiciousPatterns.suspiciousTlds.some(tld => 
+                domain.endsWith(tld)
+            );
+            
+            if (hasSuspiciousTld) {
+                riskScore += 15;
+                detectedPatterns.push({type: 'warning', text: 'TLD (akhiran domain) termasuk kategori berisiko'});
+            }
+            
+            // Cek domain mencurigakan
+            const hasSuspiciousDomain = suspiciousPatterns.suspiciousDomains.some(suspicious => 
+                domain.endsWith(suspicious)
+            );
+            
+            if (hasSuspiciousDomain) {
+                riskScore += 20;
+                detectedPatterns.push({type: 'warning', text: 'Domain termasuk kategori berisiko'});
+            }
+            
+            // Cek kata kunci phishing dalam path
+            const phishingKeywords = suspiciousPatterns.phishing.filter(keyword => 
+                path.includes(keyword) || domain.includes(keyword)
+            );
+            
+            if (phishingKeywords.length > 0) {
+                riskScore += phishingKeywords.length * 10;
+                detectedPatterns.push({
+                    type: 'danger', 
+                    text: `Terdeteksi kata kunci phishing: ${phishingKeywords.slice(0, 3).join(', ')}`
+                });
+            }
+            
+            // Cek kata kunci judi dalam path
+            const gamblingKeywords = suspiciousPatterns.gambling.filter(keyword => 
+                path.includes(keyword) || domain.includes(keyword)
+            );
+            
+            if (gamblingKeywords.length > 0) {
+                riskScore += gamblingKeywords.length * 15;
+                detectedPatterns.push({
+                    type: 'danger', 
+                    text: `Terdeteksi kata kunci judi: ${gamblingKeywords.slice(0, 3).join(', ')}`
+                });
+            }
+            
+            // Cek kata kunci dewasa dalam path
+            const adultKeywords = suspiciousPatterns.adult.filter(keyword => 
+                path.includes(keyword) || domain.includes(keyword)
+            );
+            
+            if (adultKeywords.length > 0) {
+                riskScore += adultKeywords.length * 15;
+                detectedPatterns.push({
+                    type: 'danger', 
+                    text: `Terdeteksi kata kunci konten dewasa: ${adultKeywords.slice(0, 3).join(', ')}`
+                });
+            }
+            
+            // Cek kata kunci scam dalam path
+            const scamKeywords = suspiciousPatterns.scam.filter(keyword => 
+                path.includes(keyword) || domain.includes(keyword)
+            );
+            
+            if (scamKeywords.length > 0) {
+                riskScore += scamKeywords.length * 10;
+                detectedPatterns.push({
+                    type: 'danger', 
+                    text: `Terdeteksi kata kunci penawaran mencurigakan: ${scamKeywords.slice(0, 3).join(', ')}`
+                });
+            }
+            
+            // Cek panjang URL (URL yang sangat panjang sering digunakan untuk phishing)
+            if (normalizedURL.length > 100) {
+                riskScore += 10;
+                detectedPatterns.push({type: 'warning', text: 'URL sangat panjang (biasa digunakan untuk menyembunyikan domain asli)'});
+            }
+            
+            // Cek penggunaan karakter khusus
+            if (normalizedURL.includes('%') || normalizedURL.includes('@') || 
+                (normalizedURL.includes('?') && normalizedURL.includes('='))) {
+                riskScore += 5;
+                detectedPatterns.push({type: 'warning', text: 'URL mengandung karakter khusus yang dapat digunakan untuk manipulasi'});
+            }
+            
+            // Tentukan status berdasarkan riskScore
+            let status, reason, details;
+            
+            if (riskScore <= 10 && !hasSuspiciousDomain && !hasSuspiciousTld && 
+                phishingKeywords.length === 0 && gamblingKeywords.length === 0 && 
+                adultKeywords.length === 0 && scamKeywords.length === 0) {
+                status = 'safe';
+                reason = 'Link tampak aman';
+                details = 'URL ini tidak menunjukkan pola mencurigakan berdasarkan analisis kami. Namun, tetap berhati-hati saat mengunjungi situs baru.';
+            } else if (riskScore <= 30) {
+                status = 'suspicious';
+                reason = 'Link memiliki beberapa indikator mencurigakan';
+                details = 'URL ini menunjukkan beberapa karakteristik yang biasa ditemukan pada link berisiko. Disarankan untuk tidak memasukkan informasi sensitif.';
+            } else {
+                status = 'suspicious';
+                reason = 'Link sangat mencurigakan';
+                details = 'URL ini menunjukkan banyak indikator berisiko. Sangat disarankan untuk tidak mengklik link ini atau membagikannya kepada orang lain.';
+            }
+            
+            // Jika tidak ada pola yang terdeteksi, tambahkan pesan default
+            if (detectedPatterns.length === 0) {
+                detectedPatterns.push({type: 'safe', text: 'Tidak ditemukan pola mencurigakan dalam URL ini'});
+            }
+            
+            return {
+                status,
+                reason,
+                details,
+                detectedPatterns,
+                riskScore,
+                url: normalizedURL,
+                domain
+            };
+        }
+
+        // Fungsi untuk menampilkan hasil
+        function displayResults(result) {
+            const resultsSection = document.getElementById('resultsSection');
+            const statusBadge = document.getElementById('statusBadge');
+            const analyzedUrl = document.getElementById('analyzedUrl');
+            const indicatorsContainer = document.getElementById('indicators');
+            const suggestionsContainer = document.getElementById('suggestions');
+            
+            // Tampilkan section hasil
+            resultsSection.classList.add('active');
+            
+            // Set URL yang dianalisis
+            analyzedUrl.textContent = result.url;
+            
+            // Set status badge
+            statusBadge.innerHTML = '';
+            if (result.status === 'safe') {
+                statusBadge.className = 'status-badge status-safe';
+                statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> Aman';
+            } else {
+                statusBadge.className = 'status-badge status-suspicious';
+                statusBadge.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Mencurigakan';
+            }
+            
+            // Set indikator
+            indicatorsContainer.innerHTML = '';
+            result.detectedPatterns.forEach(pattern => {
+                const indicator = document.createElement('div');
+                indicator.style.marginBottom = '8px';
+                indicator.style.padding = '8px 12px';
+                indicator.style.borderRadius = '6px';
+                indicator.style.fontSize = '14px';
+                
+                if (pattern.type === 'safe') {
+                    indicator.style.backgroundColor = 'rgba(111, 168, 161, 0.2)';
+                    indicator.style.borderLeft = '3px solid var(--calm-sage-teal)';
+                } else if (pattern.type === 'warning') {
+                    indicator.style.backgroundColor = 'rgba(193, 132, 132, 0.2)';
+                    indicator.style.borderLeft = '3px solid var(--dusty-rose-clay)';
+                } else {
+                    indicator.style.backgroundColor = 'rgba(193, 132, 132, 0.3)';
+                    indicator.style.borderLeft = '3px solid #a05050';
+                }
+                
+                indicator.textContent = pattern.text;
+                indicatorsContainer.appendChild(indicator);
+            });
+            
+            // Set saran
+            suggestionsContainer.innerHTML = '';
+            
+            const safeSuggestions = [
+                'Verifikasi sumber link sebelum mengklik',
+                'Periksa domain dengan cermat - pastikan sesuai dengan situs resmi',
+                'Waspada terhadap permintaan informasi pribadi seperti OTP, PIN, atau password',
+                'Gunakan kata sandi yang berbeda untuk setiap akun online',
+                'Aktifkan verifikasi dua langkah jika tersedia'
+            ];
+            
+            const suspiciousSuggestions = [
+                'JANGAN memasukkan informasi pribadi apapun di situs ini',
+                'JANGAN mengklik link jika diterima dari sumber yang tidak dikenal',
+                'Verifikasi dengan pengirim melalui saluran terpisah jika ragu',
+                'Laporkan link mencurigakan ke platform tempat Anda menerimanya',
+                'Gunakan antivirus atau alat keamanan untuk memindai perangkat Anda'
+            ];
+            
+            const suggestionsToShow = result.status === 'safe' ? safeSuggestions : suspiciousSuggestions;
+            
+            suggestionsToShow.forEach(suggestion => {
+                const li = document.createElement('li');
+                li.textContent = suggestion;
+                suggestionsContainer.appendChild(li);
+            });
+            
+            // Scroll ke hasil
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Event listener untuk tombol scan
+        document.getElementById('scanButton').addEventListener('click', function() {
+            const urlInput = document.getElementById('urlInput');
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                alert('Masukkan URL terlebih dahulu');
+                urlInput.focus();
+                return;
+            }
+            
+            // Tampilkan loading state
+            const scanButton = document.getElementById('scanButton');
+            const originalText = scanButton.innerHTML;
+            scanButton.classList.add('loading');
+            scanButton.disabled = true;
+            scanButton.innerHTML = 'Memindai...';
+            
+            // Simulasi proses pemindaian (biasanya langsung, tapi ditambahkan delay untuk UX)
+            setTimeout(() => {
+                const result = scanURL(url);
+                displayResults(result);
+                
+                // Kembalikan tombol ke state normal
+                scanButton.classList.remove('loading');
+                scanButton.disabled = false;
+                scanButton.innerHTML = originalText;
+            }, 800);
+        });
+
+        // Event listener untuk tekan Enter di input
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('scanButton').click();
+            }
+        });
+
+        // Contoh URL untuk testing
+        document.getElementById('urlInput').value = 'https://www.bca.co.id/login';
+        
+        // Inisialisasi dengan contoh URL
+        window.addEventListener('DOMContentLoaded', function() {
+            // Tampilkan contoh hasil jika diinginkan
+            // const result = scanURL('https://www.bca.co.id/login');
+            // displayResults(result);
+        });
+    </script>
+</body>
+</html>
