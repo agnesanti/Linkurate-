@@ -11,3 +11,6 @@ Agnes Dinita Harsanti
 
 # anggota 2
 Maria Sevti Cahayani
+
+# anggota 3
+Favian Faiz Pratama Wibowo
