@@ -470,10 +470,34 @@
         // Database pola URL mencurigakan
         const suspiciousPatterns = {
             phishing: [
-                'login', 'signin', 'verify', 'account', 'security', 'update', 'confirm',
-                'bank', 'paypal', 'dana', 'ovo', 'gopay', 'bca', 'bri', 'mandiri', 'bni',
-                'password', 'credential', 'authentication', 'validation'
-            ],
+  /login/i, /signin/i, /sign-in/i, /sign_in/i, /verify/i, /verification/i,
+  /confirm/i, /confirmation/i, /account/i, /account-update/i, /update-account/i,
+  /password/i, /reset-password/i, /change-password/i, /password-reset/i,
+  /security/i, /security-check/i, /secure/i, /secure-login/i, /authentication/i,
+  /auth/i, /authentic/i, /credential/i, /recover/i, /recovery/i, /account-recovery/i,
+  /validate/i, /validation/i, /approve/i, /approval/i, /identity/i, /id-check/i,
+  /confirm-identity/i, /account-verify/i, /verify-account/i, /suspend/i, /suspended/i,
+  /locked/i, /lock/i, /unlock/i, /login-alert/i, /unauthorized/i, /illegal-access/i,
+  /danger/i, /alert/i, /notice/i, /important/i, /action-required/i, /urgent-action/i,
+  /login-failed/i, /login-error/i, /failed-login/i, /account-warning/i, /account-issue/i,
+  /relogin/i, /re-authenticate/i, /reauth/i, /confirm-details/i, /check-account/i,
+  /secure-account/i, /restore-account/i, /update-info/i, /email-verification/i,
+  /confirm-email/i, /verify-email/i, /identity-verification/i, /security-verification/i,
+  /account-checkup/i, /review-account/i, /login-verification/i, /confirm-login/i,
+  /check-security/i, /account-suspension/i, /reset-authentication/i, /account-alert/i,
+  /confirm-now/i, /verify-now/i, /action-now/i, /secure-your-account/i,
+  /account-protection/i, /login-protection/i, /confirm-password/i, /update-security/i,
+  /password-expired/i, /expire-password/i, /validate-identity/i, /identity-check/i,
+  /verify-identity/i, /secure-session/i, /session-expired/i, /confirm-action/i,
+  /validate-action/i, /security-alert-now/i, /login-attempt/i, /failed-authentication/i,
+  /suspicious-login/i, /unauthorized-access/i, /account-verification-now/i,
+  /check-login/i, /confirm-account-now/i, /verify-account-now/i, /secure-login-now/i,
+  /action-required-immediately/i, /confirm-your-account/i, /verify-your-account/i,
+  /reset-your-password/i, /confirm-your-identity/i, /verify-identity-now/i,
+  /security-update-now/i, /login-issue/i, /account-restore-now/i, /verify-details-now/i,
+  /confirm-details-now/i, /validate-account-now/i, /action-required-immediately-now/i,
+  /urgent-action-now/i, /account-alert-now/i, /login-alert-now/i, /security-check-now/i
+],
             gambling: [
                 'poker', 'casino', 'slot', 'bet', 'taruhan', 'togel', 'judibola',
                 'sportsbook', 'livecasino', 'jackpot', 'lottery', 'gamble' , 'gacor'
